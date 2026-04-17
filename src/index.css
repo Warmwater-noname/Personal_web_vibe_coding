@@ -1,0 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-brand: #35bfab;
+    --color-primary: #334f52;
+    --color-secondary: #7b888e;
+    --color-bg: #eeeeee;
+    --color-card: rgba(255, 255, 255, 0.4);
+    --color-article: rgba(255, 255, 255, 0.8);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--color-bg);
+    font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--color-primary);
+    line-height: 1.25;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 3px;
+  }
+}
+
+@layer components {
+  .glass-card {
+    background-color: var(--color-card);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid #ffffff;
+    border-radius: 40px;
+    box-shadow: 0 40px 50px -32px rgba(0, 0, 0, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.25);
+    padding: 24px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 40px 50px -32px rgba(0, 0, 0, 0.08), inset 0 0 20px rgba(255, 255, 255, 0.35);
+  }
+
+  .clock-digit {
+    font-family: 'Orbitron', monospace;
+    background: rgba(53, 191, 171, 0.08);
+    border-radius: 16px;
+    padding: 12px 20px;
+  }
+
+  /* Organic bento layout */
+  .bento-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Entrance animation */
+  .bento-item {
+    animation: bentoIn 0.5s cubic-bezier(.25,.8,.25,1) both;
+    animation-delay: var(--delay, 0s);
+  }
+
+  @keyframes bentoIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========== Desktop (>=1024px) — absolute positioning ========== */
+  @media (min-width: 1024px) {
+    .bento-container { height: 700px; }
+    .bento-item {
+      position: absolute;
+      transition: transform 0.4s cubic-bezier(.25,.8,.25,1), box-shadow 0.4s ease;
+    }
+    .bento-sidebar  { top: 0;     left: 8%;   width: 17%; height: 460px; }
+    .bento-album    { top: 0;     left: 27%;  width: 43%; height: 206px; }
+    .bento-avatar   { top: 226px; left: 27%;  width: 43%; height: 280px; }
+    .bento-social   { top: 526px; left: 27%;  width: 43%; height: 60px;  }
+    .bento-clock    { top: 0;     left: 72%;  width: 27%; height: 150px; }
+    .bento-calendar { top: 170px; left: 72%;  width: 27%; height: 340px; }
+    .bento-music    { top: 530px; left: 72%;  width: 27%; height: 80px;  }
+    .bento-like     { top: 480px; left: 8%;   width: 17%; height: 150px; }
+  }
+
+  /* ========== Tablet (640-1023px) — CSS Grid 2 columns ========== */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .bento-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      height: auto;
+    }
+    .bento-item { min-height: 0; }
+    .bento-sidebar  { grid-column: 1; grid-row: 1 / 3; min-height: 340px; }
+    .bento-album    { grid-column: 2; min-height: 200px; }
+    .bento-clock    { grid-column: 2; min-height: 120px; }
+    .bento-avatar   { grid-column: 1 / -1; min-height: 220px; }
+    .bento-social   { grid-column: 1 / -1; min-height: 56px; }
+    .bento-calendar { grid-column: 1; min-height: 300px; }
+    .bento-like     { grid-column: 2; min-height: 140px; }
+    .bento-music    { grid-column: 1 / -1; min-height: 64px; }
+  }
+
+  /* ========== Mobile (<640px) — single column stack ========== */
+  @media (max-width: 639px) {
+    .bento-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-top: 24px;
+      padding-bottom: 40px;
+    }
+    .bento-item {
+      width: 100% !important;
+      height: auto !important;
+      min-height: 0;
+    }
+    .bento-sidebar { min-height: 320px; }
+    .bento-album   { min-height: 200px; }
+    .bento-avatar  { min-height: 220px; }
+    .bento-social  { min-height: 56px; }
+    .bento-clock   { min-height: 100px; }
+    .bento-calendar{ min-height: 280px; }
+    .bento-music   { min-height: 64px; }
+    .bento-like    { min-height: 120px; }
+  }
+}
+
+/* markdown styles for notes */
+.markdown-body h1 { @apply text-xl font-bold mb-3 text-gray-800; }
+.markdown-body h2 { @apply text-lg font-semibold mb-2 text-gray-700; }
+.markdown-body h3 { @apply text-base font-semibold mb-2 text-gray-700; }
+.markdown-body p { @apply mb-2 text-gray-600 leading-relaxed text-sm; }
+.markdown-body ul { @apply list-disc list-inside mb-2 text-sm text-gray-600; }
+.markdown-body ol { @apply list-decimal list-inside mb-2 text-sm text-gray-600; }
+.markdown-body li { @apply mb-1; }
+.markdown-body code { @apply bg-gray-100/60 px-1.5 py-0.5 rounded text-xs font-mono; color: var(--color-brand); }
+.markdown-body pre { @apply bg-gray-800/80 text-gray-100 p-3 rounded-lg mb-3 overflow-x-auto text-xs; }
+.markdown-body pre code { @apply bg-transparent p-0 text-gray-100; }
+.markdown-body blockquote { @apply border-l-4 pl-3 mb-2 text-gray-500 italic text-sm; border-color: var(--color-brand); }
+.markdown-body a { @apply underline; color: var(--color-brand); }
+.markdown-body table { @apply w-full border-collapse mb-3 text-sm; }
+.markdown-body th { @apply border border-gray-200 px-3 py-1.5 text-left font-semibold; background: rgba(53,191,171,0.08); }
+.markdown-body td { @apply border border-gray-200 px-3 py-1.5; }
+.markdown-body img { @apply rounded-lg max-w-full my-2; }
+.markdown-body hr { @apply border-gray-200 my-4; }
+
+/* music player slider */
+input[type="range"].music-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type="range"].music-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(0,0,0,0.15);
+}
+
+/* album lightbox */
+.album-lightbox {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
