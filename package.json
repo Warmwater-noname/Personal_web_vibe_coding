@@ -6,7 +6,7 @@
   "homepage": "https://warmwater-noname.github.io/Personal_web_vibe_coding",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build --base=/Personal_web_vibe_coding/",
     "preview": "vite preview"
   },
   "dependencies": {
