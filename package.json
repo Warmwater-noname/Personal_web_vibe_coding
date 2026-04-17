@@ -3,7 +3,6 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://warmwater-noname.github.io/Personal_web_vibe_coding",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build --base=/Personal_web_vibe_coding/",
