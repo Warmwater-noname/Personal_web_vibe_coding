@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build --base=/Personal_web_vibe_coding/",
+    "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
