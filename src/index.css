@@ -89,10 +89,10 @@
     .bento-sidebar  { top: 0;     left: 8%;   width: 17%; height: 460px; }
     .bento-album    { top: 0;     left: 27%;  width: 43%; height: 206px; }
     .bento-avatar   { top: 226px; left: 27%;  width: 43%; height: 280px; }
-    .bento-social   { top: 526px; left: 27%;  width: 43%; height: 60px;  }
+    .bento-social   { top: 570px; left: 27%;  width: 43%; height: 60px;  }
     .bento-clock    { top: 0;     left: 72%;  width: 27%; height: 150px; }
     .bento-calendar { top: 170px; left: 72%;  width: 27%; height: 340px; }
-    .bento-music    { top: 530px; left: 72%;  width: 27%; height: 80px;  }
+    .bento-music    { top: 550px; left: 72%;  width: 27%; height: 80px;  }
     .bento-like     { top: 480px; left: 8%;   width: 17%; height: 150px; }
   }
 
@@ -197,4 +197,56 @@ input[type="range"].music-slider::-webkit-slider-thumb {
 
 .float-animation {
   animation: float 3s ease-in-out infinite;
+}
+
+/* Note reader full-screen enter animation */
+.note-reader-enter {
+  animation: readerIn 0.35s cubic-bezier(.25,.8,.25,1);
+}
+
+@keyframes readerIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Notes list scrollbar (inside sidebar) */
+.notes-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.notes-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.notes-scroll::-webkit-scrollbar-thumb {
+  background: rgba(53, 191, 171, 0.35);
+  border-radius: 3px;
+}
+.notes-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(53, 191, 171, 0.6);
+}
+
+/* Project cards */
+.project-card {
+  animation: bentoIn 0.5s cubic-bezier(.25,.8,.25,1) both;
+  cursor: pointer;
+}
+.project-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 40px 50px -32px rgba(0, 0, 0, 0.12), inset 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+.project-expanded {
+  animation: expandIn 0.35s cubic-bezier(.25,.8,.25,1);
+}
+@keyframes expandIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Copy toast */
+.toast-enter {
+  animation: toastIn 0.25s ease;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
 }

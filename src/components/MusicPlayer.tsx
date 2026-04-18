@@ -1,15 +1,21 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import { Play, Pause, SkipBack, SkipForward, Music } from 'lucide-react'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import { Play, Pause, SkipBack, SkipForward, Music, Volume2, VolumeX, Volume1 } from 'lucide-react'
+import musicFiles from 'virtual:music-manifest'
 
 interface Track {
   name: string
   src: string
 }
 
-const MUSIC_FILES: Track[] = [
-  { name: 'Close To You', src: '/music/Close To You.mp3' },
-  { name: '示例音乐', src: '/music/sample.mp3' },
-]
+// 默认音量，范围 0.0 ~ 1.0（修改此常量即可更改初始默认音量）
+const DEFAULT_VOLUME = 0.3
+
+function buildTracks(files: string[]): Track[] {
+  return files.map(f => ({
+    name: f.replace(/\.[^.]+$/, ''),
+    src: `/music/${encodeURIComponent(f)}`,
+  }))
+}
 
 export default function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -17,7 +23,14 @@ export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [tracks, setTracks] = useState<Track[]>(MUSIC_FILES)
+  const [volume, setVolume] = useState<number>(() => {
+    const saved = typeof window !== 'undefined' ? window.localStorage.getItem('music-volume') : null
+    const v = saved != null ? parseFloat(saved) : DEFAULT_VOLUME
+    return isNaN(v) ? DEFAULT_VOLUME : Math.max(0, Math.min(1, v))
+  })
+  const [muted, setMuted] = useState(false)
+  const [showVolume, setShowVolume] = useState(false)
+  const tracks = useMemo(() => buildTracks(musicFiles), [])
 
   const currentTrack = tracks[currentIndex] || tracks[0]
 
@@ -50,13 +63,24 @@ export default function MusicPlayer() {
 
   useEffect(() => {
     const audio = audioRef.current
-    if (!audio) return
+    if (!audio || !currentTrack) return
     audio.src = currentTrack.src
     audio.load()
     if (isPlaying) {
       audio.play().catch(() => {})
     }
-  }, [currentIndex, currentTrack.src])
+  }, [currentIndex, currentTrack?.src])
+
+  // Apply volume / mute to audio element
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.volume = volume
+    audio.muted = muted
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('music-volume', String(volume))
+    }
+  }, [volume, muted])
 
   useEffect(() => {
     const audio = audioRef.current
@@ -88,6 +112,16 @@ export default function MusicPlayer() {
     setProgress(val)
   }
 
+  const handleVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const v = parseFloat(e.target.value)
+    setVolume(v)
+    if (v > 0 && muted) setMuted(false)
+  }
+
+  const toggleMute = () => setMuted(m => !m)
+
+  const VolumeIcon = muted || volume === 0 ? VolumeX : volume < 0.5 ? Volume1 : Volume2
+
   const formatTime = (t: number) => {
     if (!t || isNaN(t)) return '0:00'
     const m = Math.floor(t / 60)
@@ -115,7 +149,7 @@ export default function MusicPlayer() {
           <Music size={14} style={{ color: 'var(--color-brand)' }} />
         </div>
         <p className="flex-1 min-w-0 text-sm font-medium truncate" style={{ color: 'var(--color-primary)' }}>{currentTrack.name}</p>
-        <div className="flex items-center gap-0.5 flex-shrink-0">
+        <div className="flex items-center gap-0.5 flex-shrink-0 relative">
           <button onClick={prev} className="p-1 hover:bg-white/40 rounded-full transition-colors">
             <SkipBack size={14} className="text-gray-500" />
           </button>
@@ -132,6 +166,41 @@ export default function MusicPlayer() {
           <button onClick={next} className="p-1 hover:bg-white/40 rounded-full transition-colors">
             <SkipForward size={14} className="text-gray-500" />
           </button>
+          {/* Volume control */}
+          <div
+            className="relative"
+            onMouseEnter={() => setShowVolume(true)}
+            onMouseLeave={() => setShowVolume(false)}
+          >
+            <button
+              onClick={toggleMute}
+              className="p-1 hover:bg-white/40 rounded-full transition-colors"
+              aria-label="音量"
+            >
+              <VolumeIcon size={14} className="text-gray-500" />
+            </button>
+            {showVolume && (
+              <div
+                className="absolute right-0 bottom-full mb-2 px-3 py-2 rounded-xl shadow-lg z-20"
+                style={{ backgroundColor: 'var(--color-article)', border: '1px solid #ffffff', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+              >
+                <div className="flex items-center gap-2" style={{ width: 120 }}>
+                  <input
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    value={muted ? 0 : volume}
+                    onChange={handleVolume}
+                    className="music-slider flex-1 cursor-pointer"
+                  />
+                  <span className="text-[10px] w-7 text-right" style={{ color: 'var(--color-secondary)' }}>
+                    {Math.round((muted ? 0 : volume) * 100)}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       {/* Row 2: progress bar + time */}
@@ -141,8 +210,10 @@ export default function MusicPlayer() {
           type="range"
           min={0}
           max={duration || 0}
+          step="any"
           value={progress}
           onChange={handleSeek}
+          disabled={!duration}
           className="music-slider flex-1 cursor-pointer"
         />
         <span className="text-[10px] w-7 text-right flex-shrink-0" style={{ color: 'var(--color-secondary)' }}>{formatTime(duration)}</span>
