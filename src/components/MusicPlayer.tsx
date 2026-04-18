@@ -7,8 +7,8 @@ interface Track {
 }
 
 const MUSIC_FILES: Track[] = [
-  { name: 'Close To You', src: '/music/Close To You.mp3' },
-  { name: '示例音乐', src: '/music/sample.mp3' },
+  { name: 'Close To You', src: import.meta.env.BASE_URL + 'music/Close To You.mp3' },
+  { name: '示例音乐', src: import.meta.env.BASE_URL + 'music/sample.mp3' },
 ]
 
 export default function MusicPlayer() {

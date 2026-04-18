@@ -5,7 +5,7 @@ export default function AvatarCard() {
   const [greeting, setGreeting] = useState('')
 
   useEffect(() => {
-    fetch('/profile/个性签名.txt')
+    fetch(import.meta.env.BASE_URL + 'profile/个性签名.txt')
       .then(res => {
         if (res.ok) return res.text()
         return "I'm Youyi, Nice to meet you!"
@@ -26,7 +26,7 @@ export default function AvatarCard() {
       <div className="float-animation mb-5">
         <div className="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden relative" style={{ background: 'linear-gradient(135deg, #fff9c4, #ffe082)', boxShadow: '0 8px 24px rgba(255,224,130,0.4)' }}>
           <img
-            src="/profile/头像.png"
+            src={import.meta.env.BASE_URL + 'profile/头像.png'}
             alt="Avatar"
             className="w-full h-full object-cover"
             onError={(e) => {

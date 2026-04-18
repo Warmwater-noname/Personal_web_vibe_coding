@@ -12,8 +12,8 @@ interface NoteFile {
 }
 
 const NOTE_FILES: NoteFile[] = [
-  { name: '欢迎笔记', path: '/notes/welcome.md', date: '2026/4/18', desc: '个人网站使用指南和功能介绍' },
-  { name: '学习笔记', path: '/notes/study.md', date: '2026/4/1', desc: 'Linux基础、编程语言学习记录' },
+  { name: '欢迎笔记', path: import.meta.env.BASE_URL + 'notes/welcome.md', date: '2026/4/18', desc: '个人网站使用指南和功能介绍' },
+  { name: '学习笔记', path: import.meta.env.BASE_URL + 'notes/study.md', date: '2026/4/1', desc: 'Linux基础、编程语言学习记录' },
 ]
 
 export default function NotesCard() {
@@ -95,7 +95,7 @@ export default function NotesCard() {
       <div className="flex flex-col items-center mb-3">
         <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm mb-2" style={{ background: 'linear-gradient(135deg, #e8f5e9, #fff9c4)' }}>
           <img
-            src="/profile/头像.png"
+            src={import.meta.env.BASE_URL + 'profile/头像.png'}
             alt=""
             className="w-full h-full object-cover"
             onError={(e) => {
