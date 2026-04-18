@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { FileText } from 'lucide-react'
+import { FileText, BookOpen } from 'lucide-react'
 import noteFiles from 'virtual:notes-manifest'
 
 export interface NoteItem {
@@ -23,27 +23,18 @@ export default function NotesCard({ onSelect }: Props) {
 
   return (
     <div className="glass-card flex flex-col h-full" style={{ padding: '20px 16px' }}>
-      {/* Avatar + name */}
-      <div className="flex flex-col items-center mb-3 flex-shrink-0">
-        <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm mb-2" style={{ background: 'linear-gradient(135deg, #e8f5e9, #fff9c4)' }}>
-          <img
-            src="/profile/头像.png"
-            alt=""
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement
-              target.style.display = 'none'
-              if (target.parentElement) {
-                target.parentElement.innerHTML = '<span class="text-xl">😺</span>'
-              }
-            }}
-          />
+      {/* Header */}
+      <div className="flex items-center gap-2 mb-3 flex-shrink-0 px-1">
+        <div className="w-7 h-7 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(53,191,171,0.15)' }}>
+          <BookOpen size={14} style={{ color: 'var(--color-brand)' }} />
         </div>
-        <span className="text-xs font-bold" style={{ color: 'var(--color-primary)' }}>Youyi</span>
-        <span className="text-[10px] mt-1 px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(53,191,171,0.15)', color: 'var(--color-brand)' }}>开发中</span>
+        <span className="text-sm font-bold" style={{ color: 'var(--color-primary)' }}>笔记</span>
+        <span className="text-[10px] ml-auto px-1.5 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(53,191,171,0.15)', color: 'var(--color-brand)' }}>
+          {notes.length}
+        </span>
       </div>
 
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.4)', margin: '8px 0' }} className="flex-shrink-0" />
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.4)', marginBottom: 8 }} className="flex-shrink-0" />
 
       {/* Nav links — scrollable list */}
       <div className="flex-1 overflow-y-auto space-y-1 notes-scroll" style={{ minHeight: 0 }}>

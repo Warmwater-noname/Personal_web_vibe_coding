@@ -30,7 +30,17 @@ export default function MusicPlayer() {
   })
   const [muted, setMuted] = useState(false)
   const [showVolume, setShowVolume] = useState(false)
+  const hideTimer = useRef<number | null>(null)
   const tracks = useMemo(() => buildTracks(musicFiles), [])
+
+  const openVolume = () => {
+    if (hideTimer.current) { window.clearTimeout(hideTimer.current); hideTimer.current = null }
+    setShowVolume(true)
+  }
+  const scheduleClose = () => {
+    if (hideTimer.current) window.clearTimeout(hideTimer.current)
+    hideTimer.current = window.setTimeout(() => setShowVolume(false), 220)
+  }
 
   const currentTrack = tracks[currentIndex] || tracks[0]
 
@@ -169,8 +179,8 @@ export default function MusicPlayer() {
           {/* Volume control */}
           <div
             className="relative"
-            onMouseEnter={() => setShowVolume(true)}
-            onMouseLeave={() => setShowVolume(false)}
+            onMouseEnter={openVolume}
+            onMouseLeave={scheduleClose}
           >
             <button
               onClick={toggleMute}
@@ -181,22 +191,29 @@ export default function MusicPlayer() {
             </button>
             {showVolume && (
               <div
-                className="absolute right-0 bottom-full mb-2 px-3 py-2 rounded-xl shadow-lg z-20"
-                style={{ backgroundColor: 'var(--color-article)', border: '1px solid #ffffff', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                className="absolute right-0 bottom-full z-20"
+                style={{ paddingBottom: 8 }}
+                onMouseEnter={openVolume}
+                onMouseLeave={scheduleClose}
               >
-                <div className="flex items-center gap-2" style={{ width: 120 }}>
-                  <input
-                    type="range"
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    value={muted ? 0 : volume}
-                    onChange={handleVolume}
-                    className="music-slider flex-1 cursor-pointer"
-                  />
-                  <span className="text-[10px] w-7 text-right" style={{ color: 'var(--color-secondary)' }}>
-                    {Math.round((muted ? 0 : volume) * 100)}
-                  </span>
+                <div
+                  className="px-3 py-2 rounded-xl shadow-lg"
+                  style={{ backgroundColor: 'var(--color-article)', border: '1px solid rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                >
+                  <div className="flex items-center gap-2" style={{ width: 120 }}>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={muted ? 0 : volume}
+                      onChange={handleVolume}
+                      className="music-slider flex-1 cursor-pointer"
+                    />
+                    <span className="text-[10px] w-7 text-right" style={{ color: 'var(--color-secondary)' }}>
+                      {Math.round((muted ? 0 : volume) * 100)}
+                    </span>
+                  </div>
                 </div>
               </div>
             )}

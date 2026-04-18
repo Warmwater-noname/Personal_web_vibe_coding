@@ -3,6 +3,8 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { FolderGit2, ChevronLeft, ArrowUpRight } from 'lucide-react'
 import projectFiles from 'virtual:projects-manifest'
+import { preprocessObsidianImages } from '../utils/markdown'
+import MarkdownImage from './MarkdownImage'
 
 interface ProjectItem {
   name: string
@@ -21,6 +23,7 @@ export default function ProjectsSection() {
   const [selected, setSelected] = useState<ProjectItem | null>(null)
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(false)
+  const processed = useMemo(() => preprocessObsidianImages(content, '/projects'), [content])
 
   useEffect(() => {
     if (!selected) { setContent(''); return }
@@ -75,7 +78,9 @@ export default function ProjectsSection() {
                 <div className="w-7 h-7 border-2 rounded-full animate-spin" style={{ borderColor: 'var(--color-brand)', borderTopColor: 'transparent' }} />
               </div>
             ) : (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ img: MarkdownImage as any }}>
+                {processed}
+              </ReactMarkdown>
             )}
           </div>
         </div>

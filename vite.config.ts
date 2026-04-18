@@ -25,6 +25,8 @@ function publicManifestPlugin(): Plugin {
       scanDir('public/music', f => /\.(mp3|flac|wav|ogg|m4a)$/i.test(f)),
     'virtual:projects-manifest': () =>
       scanDir('public/projects', f => f.toLowerCase().endsWith('.md')),
+    'virtual:album-manifest': () =>
+      scanDir('public/album', f => /\.(jpe?g|png|gif|webp|avif|bmp)$/i.test(f)),
   }
 
   return {
@@ -44,7 +46,7 @@ function publicManifestPlugin(): Plugin {
     },
     configureServer(server) {
       // Invalidate virtual modules and trigger full reload when files change
-      const watched = ['public/notes', 'public/music', 'public/projects']
+      const watched = ['public/notes', 'public/music', 'public/projects', 'public/album']
       watched.forEach(d => server.watcher.add(join(process.cwd(), d)))
       const handler = (file: string) => {
         const norm = file.replace(/\\/g, '/')

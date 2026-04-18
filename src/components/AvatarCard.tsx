@@ -41,7 +41,10 @@ export default function AvatarCard() {
       </div>
 
       {/* Greeting text */}
-      <p className="text-sm mb-1" style={{ color: 'var(--color-secondary)' }}>{greeting}</p>
+      <p className="text-sm mb-1 flex items-center gap-2" style={{ color: 'var(--color-secondary)' }}>
+        {greeting}
+        <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(53,191,171,0.15)', color: 'var(--color-brand)' }}>开发中</span>
+      </p>
       <p className="text-lg leading-relaxed" style={{ color: 'var(--color-primary)' }}>
         {signature.split(/(\bYouyi\b)/i).map((part, i) =>
           /youyi/i.test(part) ? (

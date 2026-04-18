@@ -9,13 +9,19 @@ import NoteReader from './components/NoteReader'
 import AlbumCard from './components/AlbumCard'
 import ProjectsSection from './components/ProjectsSection'
 import EmailModal from './components/EmailModal'
+import ThemeToggle from './components/ThemeToggle'
 
 export default function App() {
   const [selectedNote, setSelectedNote] = useState<NoteItem | null>(null)
   const [emailOpen, setEmailOpen] = useState(false)
 
   if (selectedNote) {
-    return <NoteReader note={selectedNote} onBack={() => setSelectedNote(null)} />
+    return (
+      <>
+        <NoteReader note={selectedNote} onBack={() => setSelectedNote(null)} />
+        <ThemeToggle />
+      </>
+    )
   }
 
   return (
@@ -79,6 +85,7 @@ export default function App() {
       <ProjectsSection />
 
       <EmailModal open={emailOpen} onClose={() => setEmailOpen(false)} />
+      <ThemeToggle />
     </div>
   )
 }

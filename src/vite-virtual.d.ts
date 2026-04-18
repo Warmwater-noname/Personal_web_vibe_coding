@@ -12,3 +12,8 @@ declare module 'virtual:projects-manifest' {
   const files: string[]
   export default files
 }
+
+declare module 'virtual:album-manifest' {
+  const files: string[]
+  export default files
+}

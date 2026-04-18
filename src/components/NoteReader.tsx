@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ChevronLeft } from 'lucide-react'
 import type { NoteItem } from './NotesCard'
+import { preprocessObsidianImages } from '../utils/markdown'
+import MarkdownImage from './MarkdownImage'
 
 interface Props {
   note: NoteItem
@@ -12,6 +14,7 @@ interface Props {
 export default function NoteReader({ note, onBack }: Props) {
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(true)
+  const processed = useMemo(() => preprocessObsidianImages(content, '/notes'), [content])
 
   useEffect(() => {
     let cancelled = false
@@ -64,7 +67,9 @@ export default function NoteReader({ note, onBack }: Props) {
           </div>
         ) : (
           <div className="markdown-body">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ img: MarkdownImage as any }}>
+              {processed}
+            </ReactMarkdown>
           </div>
         )}
       </div>
